@@ -21,10 +21,22 @@ $(document).ready(function(){
 
     // var where = encodeURIComponent('where={"roomname":' + app.roomName +'}');
 
-    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=1000&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
+    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
 
-    // app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=1000&' + where);
+    // app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&' + where);
 
+  });
+
+  $('#main').on('click', '.username', function(e) {
+    console.log('here');
+    e.preventDefault();
+    // console.log("text:" + $(this).text)
+    app.addFriend($(this).text());
+  });
+
+  $(document.body).on('click', '.friend', function(e) {
+    e.preventDefault();
+    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&where%3D%7B%22username%22%3A%22' + escapeHtml($(this).text()) + '%22%7D');
   });
 
 });
@@ -49,10 +61,10 @@ var app = {
     //sets userName to users name
     app.userName = GetURLParameter('username');
     // console.log(app.userName);
-    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=1000');
+    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100');
 
     // setInterval(function(){
-    //   app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=1000&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
+    //   app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
     // }, 3000);
   },
   send: function(message){
@@ -66,7 +78,7 @@ var app = {
         console.log('chatterbox: Message sent. Data: ', data);
         // Show something on the page to user that message sent.
         //grabs posts in descending order
-        app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=1000&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
+        app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -78,7 +90,7 @@ var app = {
   fetch: function(url){
     $.ajax({
   // This is the url you should use to communicate with the parse API server.
-      url: url, // + '?order=-createdAt&limit=1000&roomname=' + app.roomName,
+      url: url, // + '?order=-createdAt&limit=100&roomname=' + app.roomName,
       type: 'GET',
       data: 'json',
       contentType: 'application/json',
@@ -99,7 +111,7 @@ var app = {
         app.rooms.push(content.roomname);
       }
       var $div = $('<div class="content">');
-      $div.html(escapeHtml(content.username) + '<br>' + escapeHtml(content.text) + '<br>' + escapeHtml(content.roomname));
+      $div.html('<a href="#" class="username" >' + escapeHtml(content.username) + '</a>' + '<br>' + escapeHtml(content.text) + '<br>' + escapeHtml(content.roomname));
       return $div;
     });
     $('#chats').html(a);
@@ -122,6 +134,8 @@ var app = {
     var $div = $('<div>');
     $div.html(message.username);
     $('#chats').prepend($div);
+    app.roomName = message.roomname;
+    $('#roomSelect').val(message.roomname);
     app.send(message);
   },
   addRoom: function(roomname){
@@ -133,11 +147,16 @@ var app = {
     app.roomName = roomname;
 
   },
-  addFriend: function(){
-
+  addFriend: function(friend){
+    console.log('addFriend called');
+    if(app.friends.indexOf(friend) === -1){
+      app.friends.push(friend);
+      $friend = $('<a href="#" class="friend">' + friend + '</a><br>');
+      $('#friends').append($friend);
+    }
+    console.log('friend:' + friend);
   },
   handleSubmit: function(){
-
     var text = $('input').val().trim();
     var roomName = app.roomName;
     var message = new Message(app.userName, text, roomName);
@@ -170,20 +189,3 @@ var escapeHtml = function (string) {
     return entityMap[s];
   });
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
