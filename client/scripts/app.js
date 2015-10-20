@@ -1,10 +1,11 @@
 // YOUR CODE HERE:
+var timeout;
+
 $(document).ready(function(){
 
   $('#send').on('submit', function(e){
     // debugger;
     e.preventDefault();
-    console.log('button clicked');
     app.handleSubmit();
   });
   //use this because rooms are being dynamically added
@@ -58,6 +59,15 @@ var app = {
         }
       }
     }
+
+    // // add selectlist for roomlist to the page
+    // if ($('.roomList').children().length === 0) {
+    //   console.log('select');
+    //   var $select = $('<select id="roomSelect">');
+    //   $select.append('<option value="New Room">New room...</option>');
+    //   $('.roomList').append($select);
+    // }
+
     //sets userName to users name
     app.userName = GetURLParameter('username');
     // console.log(app.userName);
@@ -95,26 +105,35 @@ var app = {
       data: 'json',
       contentType: 'application/json',
       success: function (data) {
+        if (timeout) { window.clearTimeout(window.timeout); }
         console.log('chatterbox: Message fetched. Data: ', data);
         app.refreshView(data.results);
+        console.log(url);
+        window.timeout = setTimeout(function(){app.fetch(url);}, 5000);
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
         console.error('chatterbox: Failed to fetch message. Error: ', data);
       }
     });
+
+
   },
   refreshView: function(messages){
+    var $select = $('<select id="roomSelect">');
     var a = messages.map(function(content){
       if(app.rooms.indexOf(content.roomname) === -1){
         //add rooms to room array
         app.rooms.push(content.roomname);
+        // $select.append('<option value="' + escapeHtml(content.roomname) +'">'+ escapeHtml(content.roomname) + '</option>');
       }
+
       var $div = $('<div class="content">');
       $div.html('<a href="#" class="username" >' + escapeHtml(content.username) + '</a>' + '<br>' + escapeHtml(content.text) + '<br>' + escapeHtml(content.roomname));
       return $div;
     });
     $('#chats').html(a);
+
     $('.roomList').children().remove();
     var $select = $('<select id="roomSelect">');
     // $select.children().remove();
@@ -158,6 +177,8 @@ var app = {
   },
   handleSubmit: function(){
     var text = $('input').val().trim();
+    //clear the textbox
+    $('input').val('');
     var roomName = app.roomName;
     var message = new Message(app.userName, text, roomName);
     app.send(message);
