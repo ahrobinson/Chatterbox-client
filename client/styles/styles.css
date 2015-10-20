@@ -82,3 +82,9 @@ form input[type=text] {
 .spinner img {
     padding: 10px;
 }
+
+.content{
+    border: 1px solid black;
+    background-color: salmon;
+    height: 50px;
+}
