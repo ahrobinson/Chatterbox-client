@@ -8,22 +8,20 @@
     <!-- dependencies -->
     <script src="bower_components/jquery/jquery.min.js"></script>
     <script src="bower_components/underscore/underscore-min.js"></script>
-    <!-- your scripts -->
+        <!-- your scripts -->
     <script src="scripts/app.js"></script>
     <script src="env/config.js"></script>
   </head>
   <body>
-    <div id="main" style="float: left">
-      <h1>chatterbox</h1>
+    <div id="main" class="round-1" style="float: left">
+      <h1>CHATTERBOX</h1>
       <!-- Your HTML goes here! -->
-      <form id="send">
-        Room: <div class="roomList"></div>
+      Room: <div class="roomList"></div>
               <br>
-
-
+      <div id="chats"></div>
+      <form id="send">
         <input id="message" type="text" placeholder="Your Message"><button class="submit">Submit</button>
       </form>
-      <div id="chats"></div>
 
     </div>
     <div id="sidebar" style="float: right">

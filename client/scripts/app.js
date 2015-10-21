@@ -22,9 +22,9 @@ $(document).ready(function(){
 
     // var where = encodeURIComponent('where={"roomname":' + app.roomName +'}');
 
-    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
+    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=4&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
 
-    // app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&' + where);
+    // app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=4&' + where);
 
   });
 
@@ -37,7 +37,7 @@ $(document).ready(function(){
 
   $(document.body).on('click', '.friend', function(e) {
     e.preventDefault();
-    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&where%3D%7B%22username%22%3A%22' + escapeHtml($(this).text()) + '%22%7D');
+    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=4&where%3D%7B%22username%22%3A%22' + escapeHtml($(this).text()) + '%22%7D');
   });
 
 });
@@ -71,10 +71,10 @@ var app = {
     //sets userName to users name
     app.userName = GetURLParameter('username');
     // console.log(app.userName);
-    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100');
+    app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=4');
 
     // setInterval(function(){
-    //   app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
+    //   app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=4&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
     // }, 3000);
   },
   send: function(message){
@@ -88,7 +88,7 @@ var app = {
         console.log('chatterbox: Message sent. Data: ', data);
         // Show something on the page to user that message sent.
         //grabs posts in descending order
-        app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=100&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
+        app.fetch('https://api.parse.com/1/classes/chatterbox?order=-createdAt&limit=4&where%3D%7B%22roomname%22%3A%22' + escapeHtml(app.roomName) + '%22%7D');
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -100,7 +100,7 @@ var app = {
   fetch: function(url){
     $.ajax({
   // This is the url you should use to communicate with the parse API server.
-      url: url, // + '?order=-createdAt&limit=100&roomname=' + app.roomName,
+      url: url, // + '?order=-createdAt&limit=4&roomname=' + app.roomName,
       type: 'GET',
       data: 'json',
       contentType: 'application/json',
@@ -128,7 +128,7 @@ var app = {
         // $select.append('<option value="' + escapeHtml(content.roomname) +'">'+ escapeHtml(content.roomname) + '</option>');
       }
 
-      var $div = $('<div class="content">');
+      var $div = $('<div class="chat">');
       $div.html('<a href="#" class="username" >' + escapeHtml(content.username) + '</a>' + '<br>' + escapeHtml(content.text) + '<br>' + escapeHtml(content.roomname));
       return $div;
     });
